@@ -1,101 +1,99 @@
-base:
-  image: phusion/baseimage
-  container_name: base
-  volumes:
-    - /etc/localtime:/etc/localtime:ro
-    - /media/server:/media
-    - /data/torrent:/downloads
-torrent:
-  image: diameter/rtorrent-rutorrent:64
-  container_name: torrents
-  volumes_from:
-    - base
-  ports:
-    - 8499:443
-    - 49160:49160/udp
-    - 49161:49161
-usenet:
-  image: linuxserver/sabnzbd
-  container_name: usenet
-  volumes_from:
-    - base
-  environment:
-    - PGID=1000
-    - PUID=1000
-  ports:
-    - 8080:8080
-    - 9090:9090
-couchpotato:
-  image: couchpotato/couchpotato
-  container_name: couchpotato
-  volumes_from:
-    - base
-  volumes:
-      - /data/couchpotato:/config
-  ports:
-    - 5050:5050
-  restart: always
-  links:
-    - torrent
-    - plex
-    - usenet
-sonarr:
-  image: tuxeh/sonarr
-  container_name: sonarr
-  volumes_from:
-    - base
-  ports:
-    - 8989:8989
-  restart: always
-  links:
-    - torrent
-    - plex
-    - usenet
-plexrequests:
-  image: lsiodev/plexrequests
-  container_name: plexrequests
-  volumes_from:
-    - base
-  volumes:
-    - /data/plexrequests:/config
-  environment:
-    - PGID=1000
-    - PUID=1000
-  ports:
-    - 3000:3000
-  links:
-    - couchpotato
-    - sonarr
-plex:
-  image: linuxserver/plex
-  container_name: plex
-  volumes_from:
-    - base
-  volumes:
-    - /data/transcode:/transcode
-    - /data/plex:/config
-  environment:
-    - PGID=1000
-    - PUID=1000
-  ports:
-    - 32400:32400
-    - 32400:32400/udp
-    - 32469:32469
-    - 32469:32469/udp
-    - 5353:5353/udp
-    - 1900:1900/udp
-plexpy:
-  image: linuxserver/plexpy
-  container_name: plexpy
-  volumes_from:
-    - base
-  volumes:
-    - /data/plexpy:/config
-      # Figure out where plex logs live
-  environment:
-    - PGID=1000
-    - PUID=1000
-  ports:
-    - 8181:8181
-  links:
-    - plex
+version: '2'
+services:
+  base:
+    image: phusion/baseimage
+    container_name: base
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /media/server:/media
+      - /data/torrent:/downloads
+  torrent:
+    image: diameter/rtorrent-rutorrent:64
+    container_name: torrents
+    volumes_from:
+      - base
+    ports:
+      - 8499:443
+      - 49160:49160/udp
+      - 49161:49161
+  usenet:
+    image: linuxserver/sabnzbd
+    container_name: usenet
+    volumes_from:
+      - base
+    environment:
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 5510:8080
+      - 9090:9090
+  couchpotato:
+    image: couchpotato/couchpotato
+    container_name: couchpotato
+    volumes_from:
+      - base
+    volumes:
+        - /data/couchpotato:/config
+    ports:
+      - 5520:5050
+    restart: always
+    links:
+      - torrent
+      - usenet
+  sonarr:
+    image: tuxeh/sonarr
+    container_name: sonarr
+    volumes_from:
+      - base
+    ports:
+      - 5530:8989
+    restart: always
+    links:
+      - torrent
+      - usenet
+  plexrequests:
+    image: lsiodev/plexrequests
+    container_name: plexrequests
+    volumes_from:
+      - base
+    volumes:
+      - /data/plexrequests:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 5540:3000
+    links:
+      - couchpotato
+      - sonarr
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    volumes_from:
+      - base
+    volumes:
+      - /data/transcode:/transcode
+      - /data/plex:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 32400:32400
+      - 32400:32400/udp
+      - 32469:32469
+      - 32469:32469/udp
+      - 5353:5353/udp
+      - 1900:1900/udp
+  plexpy:
+    image: linuxserver/plexpy
+    container_name: plexpy
+    volumes_from:
+      - base
+    volumes:
+      - /data/plexpy:/config
+        # Figure out where plex logs live
+    environment:
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 5550:8181
