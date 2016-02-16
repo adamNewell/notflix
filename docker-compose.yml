@@ -13,7 +13,7 @@ services:
     volumes_from:
       - base
     ports:
-      - 8499:443
+      - 5500:80
       - 49160:49160/udp
       - 49161:49161
   usenet:
@@ -66,24 +66,24 @@ services:
     links:
       - couchpotato
       - sonarr
-  plex:
-    image: linuxserver/plex
-    container_name: plex
-    volumes_from:
-      - base
-    volumes:
-      - /data/transcode:/transcode
-      - /data/plex:/config
-    environment:
-      - PGID=1000
-      - PUID=1000
-    ports:
-      - 32400:32400
-      - 32400:32400/udp
-      - 32469:32469
-      - 32469:32469/udp
-      - 5353:5353/udp
-      - 1900:1900/udp
+#  plex:
+#    image: linuxserver/plex
+#    container_name: plex
+#    volumes_from:
+#      - base
+#    volumes:
+#      - /data/transcode:/transcode
+#      - /data/plex:/config
+#    environment:
+#      - PGID=1000
+#      - PUID=1000
+#    ports:
+#      - 32400:32400
+#      - 32400:32400/udp
+#      - 32469:32469
+#      - 32469:32469/udp
+#      - 5353:5353/udp
+#      - 1900:1900/udp
   plexpy:
     image: linuxserver/plexpy
     container_name: plexpy
