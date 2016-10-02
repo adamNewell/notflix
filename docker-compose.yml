@@ -9,7 +9,7 @@ services:
       - /data/torrent:/downloads
   torrent:
     image: diameter/rtorrent-rutorrent:64
-    container_name: torrents
+    container_name: torrent
     volumes_from:
       - base
     ports:
@@ -28,12 +28,15 @@ services:
       - 5510:8080
       - 9090:9090
   couchpotato:
-    image: couchpotato/couchpotato
+    image: linuxserver/couchpotato
     container_name: couchpotato
     volumes_from:
       - base
     volumes:
-        - /data/couchpotato:/config
+      - /config/couchpotato:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
     ports:
       - 5520:5050
     restart: always
@@ -41,10 +44,15 @@ services:
       - torrent
       - usenet
   sonarr:
-    image: tuxeh/sonarr
+    image: linuxserver/sonarr
     container_name: sonarr
     volumes_from:
       - base
+    volumes:
+      - /config/sonarr:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
     ports:
       - 5530:8989
     restart: always
@@ -52,48 +60,43 @@ services:
       - torrent
       - usenet
   plexrequests:
-    image: lsiodev/plexrequests
+    image: rogueosb/plexrequestsnet
     container_name: plexrequests
     volumes_from:
       - base
     volumes:
-      - /data/plexrequests:/config
-    environment:
-      - PGID=1000
-      - PUID=1000
+      - /config/plexrequests:/config
     ports:
-      - 5540:3000
+      - 5540:3579
+    restart: always
     links:
       - couchpotato
       - sonarr
-#  plex:
-#    image: linuxserver/plex
-#    container_name: plex
-#    volumes_from:
-#      - base
-#    volumes:
-#      - /data/transcode:/transcode
-#      - /data/plex:/config
-#    environment:
-#      - PGID=1000
-#      - PUID=1000
-#    ports:
-#      - 32400:32400
-#      - 32400:32400/udp
-#      - 32469:32469
-#      - 32469:32469/udp
-#      - 5353:5353/udp
-#      - 1900:1900/udp
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    volumes_from:
+      - base
+    volumes:
+      - /data/plex/transcode:/transcode
+      - /config/plex:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - VERSION=latest
+      - TZ=America/Denver
+    network_mode: "host"
   plexpy:
     image: linuxserver/plexpy
     container_name: plexpy
     volumes_from:
       - base
     volumes:
-      - /data/plexpy:/config
-        # Figure out where plex logs live
+      - /config/plexpy:/config
+      - /data/plexpy/logs
     environment:
       - PGID=1000
       - PUID=1000
+      - TZ=America/Denver
     ports:
       - 5550:8181
