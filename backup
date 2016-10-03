@@ -1,0 +1,14 @@
+#! /bin/bash
+
+if [ ! -d ~/notflix-backup ]; then
+    mkdir ~/notflix-backup
+fi
+
+cp --parents /config/couchpotato/config.ini ~/notflix-backup/
+cp --parents /config/sonarr/config.xml ~/notflix-backup/
+cp --parents /config/plexpy/config.ini ~/notflix-backup/
+cp --parents /config/plex/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml ~/notflix-backup/
+
+zip -rq notflix-backup.zip ~/notflix-backup
+
+#rm -rf ~/notflix-backup

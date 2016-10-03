@@ -41,7 +41,6 @@ services:
       - 5520:5050
     restart: always
     links:
-      - torrent
       - usenet
   sonarr:
     image: linuxserver/sonarr
@@ -57,7 +56,6 @@ services:
       - 5530:8989
     restart: always
     links:
-      - torrent
       - usenet
   plexrequests:
     image: rogueosb/plexrequestsnet
@@ -69,9 +67,6 @@ services:
     ports:
       - 5540:3579
     restart: always
-    links:
-      - couchpotato
-      - sonarr
   plex:
     image: linuxserver/plex
     container_name: plex
@@ -85,7 +80,12 @@ services:
       - PUID=1000
       - VERSION=latest
       - TZ=America/Denver
-    network_mode: "host"
+    ports:
+        - 32400:32400
+        - 32400:32400/udp
+        - 32469:32469/udp
+        - 5353:5353/udp
+        - 1900:1900/udp
   plexpy:
     image: linuxserver/plexpy
     container_name: plexpy
