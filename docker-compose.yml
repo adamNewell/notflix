@@ -21,6 +21,8 @@ services:
     container_name: usenet
     volumes_from:
       - base
+    volumes:
+      - /config/sabnzbd:/config
     environment:
       - PGID=1000
       - PUID=1000
@@ -78,7 +80,7 @@ services:
     environment:
       - PGID=1000
       - PUID=1000
-      - VERSION=latest
+      - VERSION=plexpass
       - TZ=America/Denver
     ports:
         - 32400:32400
