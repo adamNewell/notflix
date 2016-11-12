@@ -7,6 +7,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /media/server:/media
       - /data/torrent:/downloads
+    restart: always
   torrent:
     image: diameter/rtorrent-rutorrent:64
     container_name: torrent
@@ -16,6 +17,7 @@ services:
       - 5500:80
       - 49160:49160/udp
       - 49161:49161
+    restart: always
   usenet:
     image: linuxserver/sabnzbd
     container_name: usenet
@@ -29,6 +31,7 @@ services:
     ports:
       - 5510:8080
       - 9090:9090
+    restart: always
   couchpotato:
     image: linuxserver/couchpotato
     container_name: couchpotato
@@ -42,8 +45,6 @@ services:
     ports:
       - 5520:5050
     restart: always
-    links:
-      - usenet
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
@@ -57,8 +58,6 @@ services:
     ports:
       - 5530:8989
     restart: always
-    links:
-      - usenet
   plexrequests:
     image: rogueosb/plexrequestsnet
     container_name: plexrequests
@@ -88,6 +87,7 @@ services:
         - 32469:32469/udp
         - 5353:5353/udp
         - 1900:1900/udp
+    restart: always
   plexpy:
     image: linuxserver/plexpy
     container_name: plexpy
@@ -102,3 +102,4 @@ services:
       - TZ=America/Denver
     ports:
       - 5550:8181
+    restart: always
