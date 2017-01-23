@@ -58,9 +58,9 @@ services:
     ports:
       - 5530:8989
     restart: always
-  plexrequests:
-    image: rogueosb/plexrequestsnet
-    container_name: plexrequests
+  ombi:
+    image: rogueosb/ombi
+    container_name: ombi
     volumes_from:
       - base
     volumes:
