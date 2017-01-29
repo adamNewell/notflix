@@ -58,6 +58,31 @@ services:
     ports:
       - 5530:8989
     restart: always
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    volumes_from:
+      - base
+    volumes:
+      - /config/radarr:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - EAP=1
+    ports:
+      - 5535:7878
+    restart: always
+  cardigann:
+    image: linuxserver/cardigann
+    container_name: cardigann
+    volumes:
+      - /config/cardigann:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 5536:5060
+    restart: always
   ombi:
     image: rogueosb/ombi
     container_name: ombi
