@@ -6,13 +6,16 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /media/server:/media
-      - /data/torrent:/downloads
+      - /data/torrent:/torrent
+      - /data/usenet:/usenet
     restart: always
   torrent:
-    image: diameter/rtorrent-rutorrent:64
+    image: diameter/rtorrent-rutorrent:latest
     container_name: torrent
     volumes_from:
       - base
+    volumes:
+      - /config/torrent:/downloads
     ports:
       - 5500:80
       - 49160:49160/udp
@@ -31,19 +34,6 @@ services:
     ports:
       - 5510:8080
       - 9090:9090
-    restart: always
-  couchpotato:
-    image: linuxserver/couchpotato
-    container_name: couchpotato
-    volumes_from:
-      - base
-    volumes:
-      - /config/couchpotato:/config
-    environment:
-      - PGID=1000
-      - PUID=1000
-    ports:
-      - 5520:5050
     restart: always
   sonarr:
     image: linuxserver/sonarr
@@ -72,24 +62,29 @@ services:
     ports:
       - 5535:7878
     restart: always
-  cardigann:
-    image: linuxserver/cardigann
-    container_name: cardigann
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    volumes_from: 
+      - base
     volumes:
-      - /config/cardigann:/config
+      - /config/jackett:/config
     environment:
       - PGID=1000
-      - PUID=1000
+      - PUIG=1000
     ports:
-      - 5536:5060
+      - 5537:9117
     restart: always
   ombi:
-    image: rogueosb/ombi
+    image: linuxserver/ombi
     container_name: ombi
     volumes_from:
       - base
     volumes:
-      - /config/plexrequests:/config
+      - /config/ombi:/config
+    environment:
+      - PGID=1000
+      - PUIG=1000
     ports:
       - 5540:3579
     restart: always
